@@ -6,6 +6,22 @@ router.get("/", (req, res) => {
   res.send("API de tarefas funcionando");
 });
 
+router.get("/tarefas", async (req, res) => {
+  try {
+    const { titulo } = req.headers;
+    if (!titulo) {
+      return res.status(401).json({ error: "Nome de usuario obrigatorio" });
+    }
+
+    const tarefas = await Dbteste.find({
+      titulo,
+    });
+    return res.json(tarefas);
+  } catch (error) {
+    return res.status(400).json({ error });
+  }
+});
+
 router.post("/tarefas", async (req, res) => {
   const novaTarefa = new Dbteste({
     titulo: req.body.titulo,
