@@ -37,6 +37,32 @@ router.delete("/tarefas/:id", async (req, res) => {
   }
 });
 
-router.put("/tarefas");
+router.put("/tarefas/:id", async (req, res) => {
+  try {
+    const tarefaId = req.params.id;
+    if (!tarefaId) {
+      return res.status(400).json({
+        error: "ID é obrigatorio",
+      });
+    }
+    const { titulo, descricao, completado, prioridade } = req.body;
+
+    const updateTarefa = await Dbteste.findByIdAndUpdate(
+      tarefaId,
+      {
+        titulo,
+        descricao,
+        completado,
+        prioridade,
+      },
+      {
+        new: true,
+      }
+    );
+    return res.json(updateTarefa);
+  } catch (error) {
+    return res.status(400).json({ error });
+  }
+});
 
 module.exports = router;
